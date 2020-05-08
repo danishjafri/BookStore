@@ -28,10 +28,10 @@ namespace BookStore.API
             {
                 var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
-                logger.LogInfo("Created database successfully.");
+                logger.LogInfo("Database migration successful.");
 
                 DatabaseHelper.SeedDatabase(context);
-                logger.LogInfo("Database seed successfully.");
+                logger.LogInfo("Database seed successful.");
             }
             catch (Exception ex)
             {

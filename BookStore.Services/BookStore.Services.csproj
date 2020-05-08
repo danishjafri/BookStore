@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookStore.Domain\BookStore.Domain.csproj" />
+    <ProjectReference Include="..\BookStore.Repositories\BookStore.Repositories.csproj" />
+  </ItemGroup>
 
 </Project>

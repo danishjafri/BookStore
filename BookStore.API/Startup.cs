@@ -15,6 +15,10 @@ using BookStore.Domain.Data;
 using Microsoft.EntityFrameworkCore.Internal;
 using AutoMapper;
 using BookStore.API.Mappings;
+using BookStore.Repositories;
+using BookStore.EFRepositories;
+using Microsoft.AspNetCore.Authorization;
+using BookStore.Services;
 
 namespace BookStore.API
 {
@@ -35,8 +39,18 @@ namespace BookStore.API
             AddSwagger(services);
 
             RegisterServices(services);
+            RegisterRepositories(services);
             AddCors(services);
             services.AddControllers();
+        }
+
+        private void RegisterRepositories(IServiceCollection services)
+        {
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<DbContext, ApplicationDbContext>();
+            services.AddTransient<IAuthorServices, AuthorServices>();
+            services.AddTransient<IAuthorRepository, AuthorRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         private void RegisterServices(IServiceCollection services)
