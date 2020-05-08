@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using BookStore.Domain.Models;
+using BookStore.Services.Generics;
 using Microsoft.AspNetCore.Mvc;
-using BookStore.Domain.Models;
-using BookStore.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStore.API.Controllers
 {

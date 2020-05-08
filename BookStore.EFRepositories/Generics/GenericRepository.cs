@@ -1,4 +1,4 @@
-﻿using BookStore.Repositories;
+﻿using BookStore.Repositories.Generics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace BookStore.EFRepositories
+namespace BookStore.EFRepositories.Generics
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -27,7 +27,6 @@ namespace BookStore.EFRepositories
         }
 
         public T Search(params object[] keyValues) => _dbSet.Find(keyValues);
-
 
         public T Single(Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
@@ -60,7 +59,6 @@ namespace BookStore.EFRepositories
 
             return orderBy != null ? orderBy(query).ToPaginate(index, size) : query.ToPaginate(index, size);
         }
-
 
         public IPaginate<TResult> GetList<TResult>(Expression<Func<T, TResult>> selector,
             Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
@@ -101,7 +99,6 @@ namespace BookStore.EFRepositories
 
         public async Task AddAsync(params T[] entities) => await _dbSet.AddRangeAsync(entities);
 
-
         public async Task AddAsync(IEnumerable<T> entities) => await _dbSet.AddRangeAsync(entities);
 
         public IQueryable<T> QueryAsync(string sql, params object[] parameters)
@@ -119,7 +116,6 @@ namespace BookStore.EFRepositories
             var existing = _dbSet.Find(entity);
             if (existing != null) _dbSet.Remove(existing);
         }
-
 
         public void Delete(object id)
         {
@@ -152,7 +148,6 @@ namespace BookStore.EFRepositories
         public void Update(T entity)
         {
             _dbSet.Update(entity);
-
         }
 
         public void Update(params T[] entities)

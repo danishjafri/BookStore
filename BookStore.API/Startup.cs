@@ -1,24 +1,23 @@
-using System;
+using AutoMapper;
+using BookStore.API.Contracts;
+using BookStore.API.Mappings;
+using BookStore.API.Services;
+using BookStore.Domain.Data;
+using BookStore.EFRepositories.Generics;
+using BookStore.Repositories.Generics;
+using BookStore.Services;
+using BookStore.Services.Generics;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
+using System;
 using System.IO;
-using BookStore.API.Contracts;
-using BookStore.API.Services;
-using BookStore.Domain.Data;
-using Microsoft.EntityFrameworkCore.Internal;
-using AutoMapper;
-using BookStore.API.Mappings;
-using BookStore.Repositories;
-using BookStore.EFRepositories;
-using Microsoft.AspNetCore.Authorization;
-using BookStore.Services;
+using System.Reflection;
 
 namespace BookStore.API
 {

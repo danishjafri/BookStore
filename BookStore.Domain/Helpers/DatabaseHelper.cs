@@ -11,7 +11,6 @@ namespace BookStore.Domain.Helpers
         {
             AddAuthors(context);
             AddBooks(context);
-
         }
 
         private static void AddBooks(ApplicationDbContext context)

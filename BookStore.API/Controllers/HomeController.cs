@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using BookStore.API.Contracts;
+﻿using BookStore.API.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using NLog;
+using System.Collections.Generic;
 
 namespace BookStore.API.Controllers
 {

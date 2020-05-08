@@ -12,6 +12,7 @@
 
         // Relationships
         public int? AuthorId { get; set; }
+
         public virtual AuthorDto Author { get; set; }
     }
 }

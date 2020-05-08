@@ -1,11 +1,10 @@
-﻿using BookStore.Domain;
-using BookStore.Repositories;
+﻿using BookStore.Repositories.Generics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BookStore.EFRepositories
+namespace BookStore.EFRepositories.Generics
 {
     public class UnitOfWork<TContext> : IRepositoryFactory, IUnitOfWork<TContext>, IUnitOfWork where TContext : DbContext, IDisposable
     {
@@ -35,7 +34,6 @@ namespace BookStore.EFRepositories
         public async Task<int> CommitAsync()
         {
             return await Context.SaveChangesAsync();
-
         }
     }
 }

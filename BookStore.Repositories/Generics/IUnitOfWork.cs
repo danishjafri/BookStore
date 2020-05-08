@@ -1,9 +1,8 @@
-﻿using BookStore.Domain;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 
-namespace BookStore.Repositories
+namespace BookStore.Repositories.Generics
 {
     public interface IUnitOfWork : IDisposable
     {

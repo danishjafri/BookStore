@@ -1,6 +1,4 @@
-﻿using BookStore.Domain;
-
-namespace BookStore.Repositories
+﻿namespace BookStore.Repositories.Generics
 {
     public interface IRepositoryFactory
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookStore.Repositories
+namespace BookStore.Repositories.Generics
 {
     public interface IPaginate<T>
     {

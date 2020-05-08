@@ -1,4 +1,4 @@
-﻿using BookStore.Repositories;
+﻿using BookStore.Repositories.Generics;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BookStore.EFRepositories
+namespace BookStore.EFRepositories.Generics
 {
-
     public class Paginate<T> : IPaginate<T>
     {
         internal Paginate(IEnumerable<T> source, int index, int size, int from)
@@ -56,7 +55,6 @@ namespace BookStore.EFRepositories
         public bool HasNext => Index - From + 1 < Pages;
     }
 
-
     internal class Paginate<TSource, TResult> : IPaginate<TResult>
     {
         public Paginate(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter,
@@ -91,7 +89,6 @@ namespace BookStore.EFRepositories
                 Items = new List<TResult>(converter(items));
             }
         }
-
 
         public Paginate(IPaginate<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter)
         {
@@ -148,10 +145,11 @@ namespace BookStore.EFRepositories
             return new Paginate<TSource, TResult>(source, converter, index, size, from);
         }
     }
+
     public static class IQueryablePaginateExtensions
     {
         public static async Task<IPaginate<T>> ToPaginateAsync<T>(this IQueryable<T> source, int index, int size,
-            int from = 0, CancellationToken cancellationToken = default(CancellationToken))
+            int from = 0, CancellationToken cancellationToken = default)
         {
             if (from > index) throw new ArgumentException($"From: {from} > Index: {index}, must From <= Index");
 

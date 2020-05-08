@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BookStore.Repositories
+namespace BookStore.Repositories.Generics
 {
     public interface IGenericRepository<T> : IDisposable where T : class
     {
@@ -32,7 +32,6 @@ namespace BookStore.Repositories
             bool disableTracking = true
             ) where TResult : class;
 
-
         Task<T> SingleAsync(Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
@@ -40,18 +39,23 @@ namespace BookStore.Repositories
         );
 
         Task AddAsync(T entity);
+
         Task AddAsync(params T[] entities);
+
         Task AddAsync(IEnumerable<T> entities);
 
-
         void Delete(T entity);
+
         void Delete(object id);
+
         void Delete(params T[] entities);
+
         void Delete(IEnumerable<T> entities);
 
-
         void Update(T entity);
+
         void Update(params T[] entities);
+
         void Update(IEnumerable<T> entities);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using BookStore.Domain;
-using BookStore.Repositories;
+using BookStore.Repositories.Generics;
 using System.Threading.Tasks;
 
-namespace BookStore.Services
+namespace BookStore.Services.Generics
 {
     public class GenericService<T> : IGenericService<T> where T : BaseEntity
     {

@@ -1,4 +1,5 @@
 ﻿using BookStore.Domain.Models;
+using BookStore.Services.Generics;
 
 namespace BookStore.Services
 {
