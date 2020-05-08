@@ -12,6 +12,9 @@ using System.IO;
 using BookStore.API.Contracts;
 using BookStore.API.Services;
 using BookStore.Domain.Data;
+using Microsoft.EntityFrameworkCore.Internal;
+using AutoMapper;
+using BookStore.API.Mappings;
 
 namespace BookStore.API
 {
@@ -27,12 +30,34 @@ namespace BookStore.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            AddContext(services);
 
+            AddSwagger(services);
+
+            RegisterServices(services);
+            AddCors(services);
+            services.AddControllers();
+        }
+
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerService, LoggerService>();
+            services.AddAutoMapper(typeof(MappingProfile));
+        }
+
+        private void AddCors(IServiceCollection services)
+        {
+            services.AddCors(c =>
+            {
+                c.AddPolicy("CorsPolicy", builder =>
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            });
+        }
+
+        private void AddSwagger(IServiceCollection services)
+        {
             services.AddSwaggerGen(s =>
             {
                 s.SwaggerDoc("v1", new OpenApiInfo
@@ -46,16 +71,15 @@ namespace BookStore.API
                 var xPath = Path.Combine(AppContext.BaseDirectory, xFiles);
                 s.IncludeXmlComments(xPath);
             });
+        }
 
-            services.AddSingleton<ILoggerService, LoggerService>();
-            services.AddCors(c =>
-            {
-                c.AddPolicy("CorsPolicy", builder =>
-                builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-            });
-            services.AddControllers();
+        private void AddContext(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
