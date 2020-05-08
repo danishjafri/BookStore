@@ -1,8 +1,7 @@
 ﻿namespace BookStore.Domain.Models
 {
-    public class Book
+    public class Book : BaseEntity
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public int? Year { get; set; }
         public string ISBN { get; set; }

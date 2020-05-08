@@ -1,12 +1,13 @@
-﻿using BookStore.Domain.Models;
-using System.Collections.Generic;
+﻿using BookStore.Domain;
+using BookStore.Repositories;
 using System.Threading.Tasks;
 
 namespace BookStore.Services
 {
-    public interface IAuthorServices
+    public interface IGenericServices<T> where T : BaseEntity
     {
-        Task<IEnumerable<Author>> GetListOfAuthorsAsync();
-        Task<Author> UpdateAuthor(Author author);
+        IPaginate<T> GetListWithPagination();
+        Task<T> GetById(int id);
+        Task<T> Update(T entity);
     }
 }

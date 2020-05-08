@@ -6,7 +6,13 @@ namespace BookStore.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        DbContext Context { get; }
-        Task CommitAsync();
+        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
+
+        Task<int> CommitAsync();
+    }
+
+    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
+    {
+        TContext Context { get; }
     }
 }

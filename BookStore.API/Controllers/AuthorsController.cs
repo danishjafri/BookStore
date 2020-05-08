@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using BookStore.Domain.Data;
 using BookStore.Domain.Models;
 using BookStore.Repositories;
 using BookStore.Services;
@@ -15,9 +12,9 @@ namespace BookStore.API.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAuthorServices _authorService;
+        private readonly IGenericServices<Author> _authorService;
 
-        public AuthorsController(IUnitOfWork unitOfWork, IAuthorServices authorService)
+        public AuthorsController(IUnitOfWork unitOfWork, IGenericServices<Author> authorService)
         {
             _unitOfWork = unitOfWork;
             _authorService = authorService;
@@ -25,21 +22,25 @@ namespace BookStore.API.Controllers
 
         // GET: api/Authors
         [HttpGet]
-        public async Task<ActionResult> GetAuthors() => Ok(await _authorService.GetListOfAuthorsAsync());
+        public ActionResult GetAuthors()
+        {
+            var authorsWithPagination = _authorService.GetListWithPagination();
+            var authors = authorsWithPagination.Items.ToList();
+            return Ok(authors);
+        }
 
-        //// GET: api/Authors/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Author>> GetAuthor(int id)
-        //{
-        //    var author = await _context.Authors.FindAsync(id);
+        // GET: api/Authors/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Author>> GetAuthor(int id)
+        {
+            var author  = await _authorService.GetById(id);
+            if (author == null)
+            {
+                return NotFound();
+            }
 
-        //    if (author == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return author;
-        //}
+            return author;
+        }
 
         //// PUT: api/Authors/5
         //// To protect from overposting attacks, enable the specific properties you want to bind to, for
