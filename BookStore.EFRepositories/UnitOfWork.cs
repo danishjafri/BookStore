@@ -1,4 +1,5 @@
-﻿using BookStore.Repositories;
+﻿using BookStore.Domain;
+using BookStore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,13 @@ namespace BookStore.EFRepositories
             Context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public IRepository<TEntity> GetRepository<TEntity>() where TEntity : class
+        public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : class
         {
             if (_repositories == null) _repositories = new Dictionary<Type, object>();
 
             var type = typeof(TEntity);
-            if (!_repositories.ContainsKey(type)) _repositories[type] = new Repository<TEntity>(Context);
-            return (IRepository<TEntity>)_repositories[type];
+            if (!_repositories.ContainsKey(type)) _repositories[type] = new GenericRepository<TEntity>(Context);
+            return (IGenericRepository<TEntity>)_repositories[type];
         }
 
         public TContext Context { get; }

@@ -5,17 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BookStore.EFRepositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly DbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
 
-        public Repository(DbContext dbContext)
+        public GenericRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
@@ -97,70 +97,77 @@ namespace BookStore.EFRepositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
+
+        public async Task AddAsync(params T[] entities) => await _dbSet.AddRangeAsync(entities);
+
+
+        public async Task AddAsync(IEnumerable<T> entities) => await _dbSet.AddRangeAsync(entities);
+
+        public IQueryable<T> QueryAsync(string sql, params object[] parameters)
         {
-            await _dbSet.AddAsync(entity);
+            return _dbSet.FromSqlRaw(sql, parameters);
         }
 
-        public async Task AddAsync(params T[] entities)
+        public async Task<T> SearchAsync(params object[] keyValues)
         {
-            await _dbSet.AddRangeAsync(entities);
+            return await _dbSet.FindAsync(keyValues);
+        }
+
+        public void Delete(T entity)
+        {
+            var existing = _dbSet.Find(entity);
+            if (existing != null) _dbSet.Remove(existing);
         }
 
 
-        public async Task AddAsync(IEnumerable<T> entities)
+        public void Delete(object id)
         {
-            await _dbSet.AddRangeAsync(entities);
+            var typeInfo = typeof(T).GetTypeInfo();
+            var key = _dbContext.Model.FindEntityType(typeInfo).FindPrimaryKey().Properties.FirstOrDefault();
+            var property = typeInfo.GetProperty(key?.Name);
+            if (property != null)
+            {
+                var entity = Activator.CreateInstance<T>();
+                property.SetValue(entity, id);
+                _dbContext.Entry(entity).State = EntityState.Deleted;
+            }
+            else
+            {
+                var entity = _dbSet.Find(id);
+                if (entity != null) Delete(entity);
+            }
         }
 
-        public Task<IQueryable<T>> QueryAsync(string sql, params object[] parameters)
+        public void Delete(params T[] entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
         }
 
-        public Task<T> SearchAsync(params object[] keyValues)
+        public void Delete(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _dbSet.RemoveRange(entities);
         }
 
-        public Task DeleteAsync(T entity)
+        public void Update(T entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+
         }
 
-        public Task DeleteAsync(object id)
+        public void Update(params T[] entities)
         {
-            throw new NotImplementedException();
+            _dbSet.UpdateRange(entities);
         }
 
-        public Task DeleteAsync(params T[] entities)
+        public void Update(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(IEnumerable<T> entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(params T[] entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(IEnumerable<T> entities)
-        {
-            throw new NotImplementedException();
+            _dbSet.UpdateRange(entities);
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _dbContext?.Dispose();
         }
     }
 }

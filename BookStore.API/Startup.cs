@@ -46,9 +46,10 @@ namespace BookStore.API
 
         private void RegisterRepositories(IServiceCollection services)
         {
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<DbContext, ApplicationDbContext>();
-            services.AddTransient(typeof(IGenericServices<>), typeof(GenericServices<>));
+            services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
+            services.AddTransient<IAuthorService, AuthorService>();
             services.AddTransient<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
         }
 

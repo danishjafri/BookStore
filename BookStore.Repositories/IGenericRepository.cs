@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace BookStore.Repositories
 {
-    public interface IRepository<T> : IDisposable where T : class
+    public interface IGenericRepository<T> : IDisposable where T : class
     {
-        Task<IQueryable<T>> QueryAsync(string sql, params object[] parameters);
+        IQueryable<T> Query(string sql, params object[] parameters);
 
         Task<T> SearchAsync(params object[] keyValues);
 
@@ -44,14 +44,14 @@ namespace BookStore.Repositories
         Task AddAsync(IEnumerable<T> entities);
 
 
-        Task DeleteAsync(T entity);
-        Task DeleteAsync(object id);
-        Task DeleteAsync(params T[] entities);
-        Task DeleteAsync(IEnumerable<T> entities);
+        void Delete(T entity);
+        void Delete(object id);
+        void Delete(params T[] entities);
+        void Delete(IEnumerable<T> entities);
 
 
-        Task UpdateAsync(T entity);
-        Task UpdateAsync(params T[] entities);
-        Task UpdateAsync(IEnumerable<T> entities);
+        void Update(T entity);
+        void Update(params T[] entities);
+        void Update(IEnumerable<T> entities);
     }
 }

@@ -4,13 +4,25 @@ using System.Threading.Tasks;
 
 namespace BookStore.Services
 {
-    public class GenericServices<T> where T : BaseEntity, IGenericServices<T>
+    public class GenericService<T> : IGenericService<T> where T : BaseEntity
     {
         private readonly IUnitOfWork _uow;
 
-        public GenericServices(IUnitOfWork uow)
+        public GenericService(IUnitOfWork uow)
         {
             _uow = uow;
+        }
+
+        public async Task CreateAsync(T entity)
+        {
+            await _uow.GetRepository<T>().AddAsync(entity);
+            await _uow.CommitAsync();
+        }
+
+        public async Task Delete(int id)
+        {
+            _uow.GetRepository<T>().Delete(id);
+            await _uow.CommitAsync();
         }
 
         public Task<T> GetById(int id)
@@ -22,10 +34,9 @@ namespace BookStore.Services
 
         public async Task<T> Update(T entity)
         {
-            await _uow.GetRepository<T>().UpdateAsync(entity);
+            _uow.GetRepository<T>().Update(entity);
             await _uow.CommitAsync();
             return entity;
-
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace BookStore.Repositories
+﻿using BookStore.Domain;
+
+namespace BookStore.Repositories
 {
     public interface IRepositoryFactory
     {
-        IRepository<T> GetRepository<T>() where T : class;
+        IGenericRepository<T> GetRepository<T>() where T : class;
     }
 }
