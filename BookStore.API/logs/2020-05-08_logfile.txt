@@ -1,0 +1,2 @@
+2020-05-08 05:12:41.6514 INFO Created database successfully.
+2020-05-08 05:12:42.9782 INFO Database seed successfully.

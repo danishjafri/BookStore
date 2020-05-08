@@ -1,4 +1,4 @@
-﻿namespace BookStore.API.Models
+﻿namespace BookStore.Domain.Models
 {
     public class Book
     {

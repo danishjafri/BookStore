@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BookStore.API.Models;
+﻿using BookStore.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.API.Data
+namespace BookStore.Domain.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

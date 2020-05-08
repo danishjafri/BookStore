@@ -1,9 +1,9 @@
-﻿using BookStore.API.Data;
-using BookStore.API.Models;
+﻿using BookStore.Domain.Data;
+using BookStore.Domain.Models;
 using System;
 using System.Linq;
 
-namespace BookStore.API.Helpers
+namespace BookStore.Domain.Helpers
 {
     public static class DatabaseHelper
     {

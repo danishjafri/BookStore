@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.API.Contracts;
-using BookStore.API.Data;
-using BookStore.API.Helpers;
+using BookStore.Domain.Data;
+using BookStore.Domain.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +35,7 @@ namespace BookStore.API
             }
             catch (Exception ex)
             {
-                logger.LogError("Error encountered while creating and seeding the database.");
+                logger.LogError($"Error encountered while creating and seeding the database. {ex.Message}");
             }
 
             host.Run();
