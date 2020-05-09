@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using BookStore.API.Contracts;
-using BookStore.API.DTOs;
+using BookStore.API.DTOs.Authors;
 using BookStore.Domain.Models;
 using BookStore.Services.Generics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,10 +59,13 @@ namespace BookStore.API.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> PutAuthor(int id, AuthorDto authorDto)
+        public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDto authorDto)
         {
-            if (id != authorDto.Id)
-                return BadRequest();
+            if (id < 1 || id != authorDto.Id || authorDto == null)
+                return BadRequest("Invalid author details provided.");
+
+            if (!ModelState.IsValid)
+                return BadRequest(new { Author = ModelState, Message = "Incomplete author details." });
 
             await _authorService.Update(_mapper.Map<Author>(authorDto));
 
@@ -73,19 +77,41 @@ namespace BookStore.API.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Author>> PostAuthor(AuthorDto authorDto)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Author>> PostAuthor(AuthorCreationDto authorDto)
         {
-            await _authorService.CreateAsync(_mapper.Map<Author>(authorDto));
-            return CreatedAtAction("GetAuthor", new { id = authorDto.Id }, authorDto);
+            if (authorDto == null)
+                return BadRequest("Invalid author details provided.");
+
+            if (!ModelState.IsValid)
+                return BadRequest(new { Author = ModelState, Message = "Incomplete author details." });
+
+            var author = await _authorService.CreateAsync(_mapper.Map<Author>(authorDto));
+            return CreatedAtAction("GetAuthor", new { id = author.Id }, authorDto);
         }
 
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthorDto>> DeleteAuthor(int id)
         {
-            await _authorService.Delete(id);
-            return NoContent();
+            try
+            {
+                await _authorService.Delete(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                InternalError($"{ex.Message} - {ex.InnerException}");
+                throw;
+            }
+        }
+
+        private ObjectResult InternalError(string message)
+        {
+            _loggerService.LogError(message);
+            return StatusCode(500, "Something went wrong, please contact the administrator.");
         }
     }
 }

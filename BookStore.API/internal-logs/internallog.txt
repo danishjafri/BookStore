@@ -3151,3 +3151,32 @@
 2020-05-08 18:11:00.3330 Debug Creating file appender: C:/Users/danis/source/repos/BookStore/BookStore.API/logs/2020-05-08_logfile.txt
 2020-05-08 18:11:00.3330 Trace Opening C:/Users/danis/source/repos/BookStore/BookStore.API/logs/2020-05-08_logfile.txt with allowFileSharedWriting=False
 2020-05-08 18:11:00.7842 Trace Opening C:/Users/danis/source/repos/BookStore/BookStore.API/logs/2020-05-08_logfile.txt with allowFileSharedWriting=False
+2020-05-08 18:21:01.4437 Info AppDomain Shutting down. Logger closing...
+2020-05-08 18:21:01.4437 Debug Stopping file watching for path 'C:\Users\danis\source\repos\BookStore\BookStore.API\bin\Debug\netcoreapp3.1' filter 'NLog.config'
+2020-05-08 18:21:01.4437 Trace Flushing all targets...
+2020-05-08 18:21:01.4596 Trace ForEachItemInParallel() 1 items
+2020-05-08 18:21:01.4881 Trace FileTarget(Name=logfile): FlushAsync
+2020-05-08 18:21:01.4917 Trace Continuation invoked: 
+2020-05-08 18:21:01.4917 Trace Parallel task completed. 0 items remaining
+2020-05-08 18:21:01.4917 Trace FileTarget(Name=logfile): FlushAsync Done
+2020-05-08 18:21:01.4917 Debug Targets not configured for logger: BookStore.API.Services.LoggerService
+2020-05-08 18:21:01.4917 Debug Closing logging configuration...
+2020-05-08 18:21:01.4917 Trace Closing File Target[logfile]
+2020-05-08 18:21:01.4917 Debug Closing target 'File Target[logfile]'.
+2020-05-08 18:21:01.5050 Trace FileTarget(Name=logfile): FinalizeFile 'C:/Users/danis/source/repos/BookStore/BookStore.API/logs/2020-05-08_logfile.txt, isArchiving: False'
+2020-05-08 18:21:01.5050 Debug FileAppender Closing Invalidate - C:/Users/danis/source/repos/BookStore/BookStore.API/logs/2020-05-08_logfile.txt
+2020-05-08 18:21:01.5050 Debug Closed target 'File Target[logfile]'.
+2020-05-08 18:21:01.5050 Trace Closing 'C:/Users/danis/source/repos/BookStore/BookStore.API/logs/${shortdate}_logfile.txt'
+2020-05-08 18:21:01.5050 Trace Closing Layout Renderer: ${literal}
+2020-05-08 18:21:01.5050 Trace Closing Layout Renderer: ${shortdate}
+2020-05-08 18:21:01.5050 Trace Closing Layout Renderer: ${literal}
+2020-05-08 18:21:01.5050 Trace Closing '${longdate} ${level:uppercase=true} ${message}'
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${longdate}
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${literal}
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${uppercase}
+2020-05-08 18:21:01.5197 Trace Closing SimpleLayout=Layout Renderer: ${level}
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${level}
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${literal}
+2020-05-08 18:21:01.5197 Trace Closing Layout Renderer: ${message}
+2020-05-08 18:21:01.5197 Debug Finished closing logging configuration.
+2020-05-08 18:21:01.5197 Info Logger has been shut down.

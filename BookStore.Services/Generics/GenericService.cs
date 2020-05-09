@@ -13,10 +13,11 @@ namespace BookStore.Services.Generics
             _uow = uow;
         }
 
-        public async Task CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
             await _uow.GetRepository<T>().AddAsync(entity);
             await _uow.CommitAsync();
+            return entity;
         }
 
         public async Task Delete(int id)

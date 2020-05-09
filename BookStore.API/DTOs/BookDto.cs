@@ -1,4 +1,6 @@
-﻿namespace BookStore.API.DTOs
+﻿using BookStore.API.DTOs.Authors;
+
+namespace BookStore.API.DTOs
 {
     public class BookDto
     {

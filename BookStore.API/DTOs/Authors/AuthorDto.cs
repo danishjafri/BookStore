@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookStore.API.DTOs
+namespace BookStore.API.DTOs.Authors
 {
     public class AuthorDto
     {
