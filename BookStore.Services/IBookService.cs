@@ -3,6 +3,6 @@ using BookStore.Services.Generics;
 
 namespace BookStore.Services
 {
-    public interface IAuthorService : IGenericService<Author> { }
+    public interface IBookService : IGenericService<Book> { }
 
 }

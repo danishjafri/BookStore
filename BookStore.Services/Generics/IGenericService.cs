@@ -12,7 +12,7 @@ namespace BookStore.Services.Generics
 
         Task<T> Update(T entity);
 
-        Task<T> CreateAsync(T entity);
+        Task<int> CreateAsync(T entity);
 
         Task Delete(int id);
     }

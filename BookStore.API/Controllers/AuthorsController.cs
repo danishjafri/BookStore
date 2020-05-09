@@ -44,13 +44,13 @@ namespace BookStore.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<AuthorDto>> GetAuthor(int id)
+        public async Task<ActionResult<GetAuthorWithBooks>> GetAuthor(int id)
         {
             var author = await _authorService.GetById(id);
             if (author == null)
                 return NotFound();
 
-            return _mapper.Map<AuthorDto>(author);
+            return _mapper.Map<GetAuthorWithBooks>(author);
         }
 
         // PUT: api/Authors/5
@@ -86,8 +86,9 @@ namespace BookStore.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(new { Author = ModelState, Message = "Incomplete author details." });
 
-            var author = await _authorService.CreateAsync(_mapper.Map<Author>(authorDto));
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, authorDto);
+            var id = await _authorService.CreateAsync(_mapper.Map<Author>(authorDto));
+            var author = await _authorService.GetById(id);
+            return CreatedAtAction("GetAuthor", new { id = author.Id }, _mapper.Map<GetAuthorWithBooks>(author));
         }
 
         // DELETE: api/Authors/5
@@ -103,9 +104,17 @@ namespace BookStore.API.Controllers
             }
             catch (Exception ex)
             {
-                InternalError($"{ex.Message} - {ex.InnerException}");
+                InternalError($"{GetControllerActionNames()}: {ex.Message} - {ex.InnerException}");
                 throw;
             }
+        }
+
+        private string GetControllerActionNames()
+        {
+            var controller = ControllerContext.ActionDescriptor.ControllerName;
+            var action = ControllerContext.ActionDescriptor.ActionName;
+
+            return $"{controller} - {action}";
         }
 
         private ObjectResult InternalError(string message)

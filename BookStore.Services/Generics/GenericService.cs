@@ -1,5 +1,7 @@
 ﻿using BookStore.Domain;
 using BookStore.Repositories.Generics;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace BookStore.Services.Generics
@@ -13,11 +15,11 @@ namespace BookStore.Services.Generics
             _uow = uow;
         }
 
-        public async Task<T> CreateAsync(T entity)
+        public async Task<int> CreateAsync(T entity)
         {
             await _uow.GetRepository<T>().AddAsync(entity);
             await _uow.CommitAsync();
-            return entity;
+            return entity.Id;
         }
 
         public async Task Delete(int id)
@@ -28,7 +30,7 @@ namespace BookStore.Services.Generics
 
         public Task<T> GetById(int id)
         {
-            return _uow.GetRepository<T>().SingleAsync(a => a.Id == id);
+            return _uow.GetRepository<T>().SingleAsync(a => a.Id == id, true);
         }
 
         public IPaginate<T> GetListWithPagination() => _uow.GetRepository<T>().GetList();

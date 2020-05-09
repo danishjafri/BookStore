@@ -37,6 +37,7 @@ namespace BookStore.Repositories.Generics
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             bool disableTracking = true
         );
+        Task<T> SingleAsync(Expression<Func<T, bool>> predicate, bool eager = false);
 
         Task AddAsync(T entity);
 

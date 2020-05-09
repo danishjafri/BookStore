@@ -1,8 +1,8 @@
 ﻿using BookStore.API.DTOs.Authors;
 
-namespace BookStore.API.DTOs
+namespace BookStore.API.DTOs.Books
 {
-    public class BookDto
+    public class GetBookWithAuthorDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -11,10 +11,6 @@ namespace BookStore.API.DTOs
         public string Summary { get; set; }
         public string Image { get; set; }
         public double? Price { get; set; }
-
-        // Relationships
-        public int? AuthorId { get; set; }
-
-        public virtual AuthorDto Author { get; set; }
+        public GetAuthorWithoutBooks Author { get; set; }
     }
 }

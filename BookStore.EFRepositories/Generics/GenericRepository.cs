@@ -12,13 +12,13 @@ namespace BookStore.EFRepositories.Generics
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly DbContext _dbContext;
+        protected readonly DbContext _context;
         protected readonly DbSet<T> _dbSet;
 
         public GenericRepository(DbContext dbContext)
         {
-            _dbContext = dbContext;
-            _dbSet = _dbContext.Set<T>();
+            _context = dbContext;
+            _dbSet = _context.Set<T>();
         }
 
         public virtual IQueryable<T> Query(string sql, params object[] parameters)
@@ -95,6 +95,20 @@ namespace BookStore.EFRepositories.Generics
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<T> SingleAsync(Expression<Func<T, bool>> predicate, bool eager = false)
+        {
+            IQueryable<T> query = _dbSet;
+            if (eager)
+            {
+                foreach (var property in _context.Model.FindEntityType(typeof(T)).GetNavigations())
+                    query = query.Include(property.Name);
+            }
+
+            if (predicate != null) query = query.Where(predicate);
+            return await query.FirstOrDefaultAsync();
+        }
+
+
         public async Task AddAsync(T entity) => await _dbSet.AddAsync(entity);
 
         public async Task AddAsync(params T[] entities) => await _dbSet.AddRangeAsync(entities);
@@ -120,13 +134,13 @@ namespace BookStore.EFRepositories.Generics
         public void Delete(object id)
         {
             var typeInfo = typeof(T).GetTypeInfo();
-            var key = _dbContext.Model.FindEntityType(typeInfo).FindPrimaryKey().Properties.FirstOrDefault();
+            var key = _context.Model.FindEntityType(typeInfo).FindPrimaryKey().Properties.FirstOrDefault();
             var property = typeInfo.GetProperty(key?.Name);
             if (property != null)
             {
                 var entity = Activator.CreateInstance<T>();
                 property.SetValue(entity, id);
-                _dbContext.Entry(entity).State = EntityState.Deleted;
+                _context.Entry(entity).State = EntityState.Deleted;
             }
             else
             {
@@ -162,7 +176,7 @@ namespace BookStore.EFRepositories.Generics
 
         public void Dispose()
         {
-            _dbContext?.Dispose();
+            _context?.Dispose();
         }
     }
 }

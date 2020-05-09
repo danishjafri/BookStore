@@ -2,6 +2,7 @@ using AutoMapper;
 using BookStore.API.Contracts;
 using BookStore.API.Mappings;
 using BookStore.API.Services;
+using BookStore.API.Utilities;
 using BookStore.Domain.Data;
 using BookStore.EFRepositories.Generics;
 using BookStore.Repositories.Generics;
@@ -49,6 +50,7 @@ namespace BookStore.API
             services.AddTransient<DbContext, ApplicationDbContext>();
             services.AddTransient(typeof(IGenericService<>), typeof(GenericService<>));
             services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IBookService, BookService>();
             services.AddTransient<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
         }
 
@@ -109,7 +111,7 @@ namespace BookStore.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.ConfigureCustomExceptionMiddleware();
             app.UseSwagger();
             app.UseSwaggerUI(s =>
             {
