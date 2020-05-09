@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using BookStore.API.Contracts;
 using BookStore.API.DTOs.Authors;
-using BookStore.Domain.Helpers;
 using BookStore.Domain.Models;
 using BookStore.Services.Generics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +14,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly IGenericService<Author> _authorService;

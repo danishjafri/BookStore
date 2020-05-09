@@ -17,6 +17,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly SignInManager<IdentityUser<int>> _signInManager;
