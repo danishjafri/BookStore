@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BookStore.API.DTOs;
 using BookStore.API.DTOs.Authors;
 using BookStore.API.DTOs.Books;
 using BookStore.Domain.Models;

@@ -97,30 +97,8 @@ namespace BookStore.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthorDto>> DeleteAuthor(int id)
         {
-            try
-            {
-                await _authorService.Delete(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                InternalError($"{GetControllerActionNames()}: {ex.Message} - {ex.InnerException}");
-                throw;
-            }
-        }
-
-        private string GetControllerActionNames()
-        {
-            var controller = ControllerContext.ActionDescriptor.ControllerName;
-            var action = ControllerContext.ActionDescriptor.ActionName;
-
-            return $"{controller} - {action}";
-        }
-
-        private ObjectResult InternalError(string message)
-        {
-            _loggerService.LogError(message);
-            return StatusCode(500, "Something went wrong, please contact the administrator.");
+            await _authorService.Delete(id);
+            return NoContent();
         }
     }
 }
