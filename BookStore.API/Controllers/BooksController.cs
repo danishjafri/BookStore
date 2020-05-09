@@ -6,7 +6,6 @@ using BookStore.Services.Generics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +14,7 @@ namespace BookStore.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IGenericService<Book> _bookService;
@@ -110,5 +110,4 @@ namespace BookStore.API.Controllers
             return NoContent();
         }
     }
-
 }
