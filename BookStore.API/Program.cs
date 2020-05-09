@@ -2,6 +2,7 @@ using BookStore.API.Contracts;
 using BookStore.Domain.Data;
 using BookStore.Domain.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +26,9 @@ namespace BookStore.API
                 context.Database.Migrate();
                 logger.LogInfo("Database migration successful.");
 
-                DatabaseHelper.SeedDatabase(context);
+                var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser<int>>>();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+                DatabaseHelper.SeedDatabase(context, userManager, roleManager).Wait();
                 logger.LogInfo("Database seed successful.");
             }
             catch (Exception ex)

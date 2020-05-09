@@ -42,6 +42,11 @@ namespace BookStore.API.Utilities
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 message = "Failed to update the database.";
             }
+             if (exception.GetType().Name == "ArgumentException")
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                message = "Request contained information that was not valid.";
+            }
             if (exception.GetType().Name == "AutoMapperMappingException")
             {
                 context.Response.StatusCode = (int)HttpStatusCode.FailedDependency;

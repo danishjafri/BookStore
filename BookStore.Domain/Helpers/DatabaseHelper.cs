@@ -1,19 +1,29 @@
 ﻿using BookStore.Domain.Data;
 using BookStore.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BookStore.Domain.Helpers
 {
     public static class DatabaseHelper
     {
-        public static void SeedDatabase(ApplicationDbContext context)
+        public async static Task SeedDatabase
+            (
+                ApplicationDbContext context,
+                UserManager<IdentityUser<int>> userManager,
+                RoleManager<IdentityRole<int>> roleManager
+            )
         {
-            AddAuthors(context);
-            AddBooks(context);
+            await AddAuthors(context);
+            await AddBooks(context);
+
+            await SeedRoles(roleManager);
+            await SeedUsers(userManager);
         }
 
-        private static void AddBooks(ApplicationDbContext context)
+        private async static Task AddBooks(ApplicationDbContext context)
         {
             if (!context.Books.Any())
             {
@@ -30,13 +40,13 @@ namespace BookStore.Domain.Helpers
                         AuthorId = i
                     };
 
-                    context.Books.Add(book);
-                    context.SaveChanges();
+                    await context.Books.AddAsync(book);
+                    await context.SaveChangesAsync();
                 }
             }
         }
 
-        private static void AddAuthors(ApplicationDbContext context)
+        private async static Task AddAuthors(ApplicationDbContext context)
         {
             if (!context.Authors.Any())
             {
@@ -49,9 +59,58 @@ namespace BookStore.Domain.Helpers
                         Bio = $"Author working, Bio number {i}"
                     };
 
-                    context.Authors.Add(author);
-                    context.SaveChanges();
+                    await context.Authors.AddAsync(author);
+                    await context.SaveChangesAsync();
                 }
+            }
+        }
+
+        private async static Task SeedUsers(UserManager<IdentityUser<int>> userManager)
+        {
+            if (await userManager.FindByEmailAsync(UserHelper.Credentials.AdminEmail) == null)
+            {
+                var user = new IdentityUser<int>
+                {
+                    UserName = UserHelper.Credentials.AdminUserName,
+                    Email = UserHelper.Credentials.AdminEmail
+                };
+
+                var result = await userManager.CreateAsync(user, UserHelper.Credentials.AdminPassword);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, UserHelper.Roles.Administrator);
+                }
+            }
+
+            if (await userManager.FindByEmailAsync(UserHelper.Credentials.CustomerEmail) == null)
+            {
+                var user = new IdentityUser<int>
+                {
+                    UserName = UserHelper.Credentials.CustomerUserName,
+                    Email = UserHelper.Credentials.CustomerEmail
+                };
+
+                var result = await userManager.CreateAsync(user, UserHelper.Credentials.CustomerPassword);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, UserHelper.Roles.Customer);
+                }
+            }
+        }
+        private async static Task SeedRoles(RoleManager<IdentityRole<int>> roleManager)
+        {
+            if (!await roleManager.RoleExistsAsync(UserHelper.Roles.Administrator))
+            {
+                var role = new IdentityRole<int> { Name = UserHelper.Roles.Administrator };
+                await roleManager.CreateAsync(role);
+            }
+
+            if (!await roleManager.RoleExistsAsync(UserHelper.Roles.Customer))
+            {
+                var role = new IdentityRole<int> { Name = UserHelper.Roles.Customer };
+                await roleManager.CreateAsync(role);
             }
         }
     }
