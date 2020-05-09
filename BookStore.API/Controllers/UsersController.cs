@@ -23,11 +23,7 @@ namespace BookStore.API.Controllers
         private readonly UserManager<IdentityUser<int>> _userManager;
         private readonly IConfiguration _configuration;
 
-        public UsersController(
-            SignInManager<IdentityUser<int>> signInManager,
-            UserManager<IdentityUser<int>> userManager,
-            IConfiguration configuration
-            )
+        public UsersController(SignInManager<IdentityUser<int>> signInManager, UserManager<IdentityUser<int>> userManager, IConfiguration configuration)
         {
             _signInManager = signInManager;
             _userManager = userManager;

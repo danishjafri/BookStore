@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using BookStore.API.Contracts;
 using BookStore.API.DTOs.Authors;
+using BookStore.Domain.Helpers;
 using BookStore.Domain.Models;
 using BookStore.Services.Generics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,11 +22,7 @@ namespace BookStore.API.Controllers
         private readonly ILoggerService _loggerService;
         private readonly IMapper _mapper;
 
-        public AuthorsController(
-            IGenericService<Author> authorService,
-            ILoggerService loggerService,
-            IMapper mapper
-            )
+        public AuthorsController(IGenericService<Author> authorService,ILoggerService loggerService,IMapper mapper)
         {
             _authorService = authorService;
             _loggerService = loggerService;
@@ -33,6 +31,7 @@ namespace BookStore.API.Controllers
 
         // GET: api/Authors
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult GetAuthors()
         {
@@ -42,7 +41,9 @@ namespace BookStore.API.Controllers
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GetAuthorWithBooks>> GetAuthor(int id)
         {
@@ -57,8 +58,11 @@ namespace BookStore.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator, Customer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDto authorDto)
         {
             if (id < 1 || id != authorDto.Id || authorDto == null)
@@ -76,8 +80,11 @@ namespace BookStore.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<Author>> PostAuthor(AuthorCreationDto authorDto)
         {
             if (authorDto == null)
@@ -93,7 +100,10 @@ namespace BookStore.API.Controllers
 
         // DELETE: api/Authors/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator, Customer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AuthorDto>> DeleteAuthor(int id)
         {

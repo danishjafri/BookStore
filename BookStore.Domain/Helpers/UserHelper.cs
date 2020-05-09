@@ -2,7 +2,7 @@
 {
     public static class UserHelper
     {
-        internal static class Roles
+        public static class Roles
         {
             public static string Administrator { get; } = "Administrator";
             public static string Customer { get; } = "Customer";
