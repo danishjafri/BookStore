@@ -1,5 +1,7 @@
-﻿using BookStore.API.Contracts;
+﻿using AutoMapper;
+using BookStore.API.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -37,17 +39,20 @@ namespace BookStore.API.Utilities
             object action;
             context.Request.RouteValues.TryGetValue("action", out action);
             context.Response.ContentType = "application/json";
-            if (exception.GetType().Name == "DbUpdateException")
+
+            if (exception.GetType() == typeof(DbUpdateException))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 message = "Failed to update the database.";
             }
-             if (exception.GetType().Name == "ArgumentException")
+
+            if (exception.GetType() == typeof(ArgumentException) || exception.GetType() == typeof(ArgumentNullException) || exception.GetType() == typeof(InvalidOperationException))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 message = "Request contained information that was not valid.";
             }
-            if (exception.GetType().Name == "AutoMapperMappingException")
+
+            if (exception.GetType() == typeof(AutoMapperMappingException))
             {
                 context.Response.StatusCode = (int)HttpStatusCode.FailedDependency;
                 message = "Error encountered by the server during process.";

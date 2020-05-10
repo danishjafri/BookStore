@@ -32,5 +32,6 @@
     <ProjectReference Include="..\BookStore.EFRepositories\BookStore.EFRepositories.csproj" />
     <ProjectReference Include="..\BookStore.Repositories\BookStore.Repositories.csproj" />
     <ProjectReference Include="..\BookStore.Services\BookStore.Services.csproj" />
+    <ProjectReference Include="..\BookStore.Shared\BookStore.Shared.csproj" />
   </ItemGroup>
 </Project>

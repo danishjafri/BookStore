@@ -1,0 +1,62 @@
+﻿@page "/Register"
+
+@inject IAuthService _authService;
+@inject NavigationManager _navManager;
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <h3 class="card-title text-center mt-3">Register Now</h3>
+            @if (isFailed)
+            {
+                <div class="alert alert-danger">
+                    <p>Something went wrong with the registration attempt</p>
+                </div>
+            }
+            <div class="card-body">
+                <EditForm Model="model" OnValidSubmit="@HandleRegistration">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <InputText id="username" type="text" class="form-control" @bind-Value="model.UserName" />
+                        <ValidationMessage For="@(() => model.UserName)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <InputText id="email" type="email" class="form-control" @bind-Value="model.EmailAddress" />
+                        <ValidationMessage For="@(() => model.EmailAddress)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <InputText id="password" type="password" class="form-control" @bind-Value="model.Password" />
+                        <ValidationMessage For="@(() => model.Password)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Password</label>
+                        <InputText id="confirm-password" type="password" class="form-control" @bind-Value="model.ConfirmPassword" />
+                        <ValidationMessage For="@(() => model.ConfirmPassword)" />
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary btn-block">Submit</button>
+                </EditForm>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@code {
+    private UserRegisterDto model = new UserRegisterDto();
+    bool isFailed = false;
+
+    private async Task HandleRegistration()
+    {
+        var response = await _authService.Register(model);
+        if (response)
+            _navManager.NavigateTo("/");
+        else
+            isFailed = true;
+    }
+}

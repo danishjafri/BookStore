@@ -22,6 +22,7 @@ namespace BookStore.API.Mappings
             CreateMap<BookUpdateDto, Book>();
             CreateMap<Book, GetBookWithAuthorDto>();
             CreateMap<Book, GetBookWithoutAuthorDto>();
+
         }
     }
 }

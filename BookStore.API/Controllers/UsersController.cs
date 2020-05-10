@@ -1,4 +1,6 @@
 ﻿using BookStore.API.DTOs.Users;
+using BookStore.Domain.Helpers;
+using BookStore.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +34,28 @@ namespace BookStore.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Register(UserRegisterDto userRegisterDto)
+        {
+            var user = new IdentityUser<int>
+            {
+                Email = userRegisterDto.EmailAddress,
+                UserName = userRegisterDto.UserName
+            };
+
+            var userCreated = await _userManager.CreateAsync(user, userRegisterDto.Password);
+            if (userCreated.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, UserHelper.Roles.Customer);
+                return Ok(new { userCreated.Succeeded });
+            }
+            return BadRequest(userCreated.Errors);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -52,11 +75,11 @@ namespace BookStore.API.Controllers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-        };
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
 
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(c => new Claim(ClaimsIdentity.DefaultRoleClaimType, c)));
