@@ -2,7 +2,7 @@
 using BookStore.API.Contracts;
 using BookStore.API.DTOs.Books;
 using BookStore.Domain.Models;
-using BookStore.Services.Generics;
+using BookStore.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +17,11 @@ namespace BookStore.API.Controllers
     [Authorize]
     public class BooksController : ControllerBase
     {
-        private readonly IGenericService<Book> _bookService;
+        private readonly IBookService _bookService;
         private readonly ILoggerService _loggerService;
         private readonly IMapper _mapper;
 
-        public BooksController(IGenericService<Book> bookService, ILoggerService loggerService, IMapper mapper)
+        public BooksController(IBookService bookService, ILoggerService loggerService, IMapper mapper)
         {
             _bookService = bookService;
             _loggerService = loggerService;
