@@ -329,6 +329,7 @@ ASALocalRun/
 
 # Custom logs
 logs
+internal-logs
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
